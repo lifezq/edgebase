@@ -1,0 +1,5 @@
+broker:
+  addr: tcp://39.100.139.81:1883
+  client: control
+  user: admin
+  password: public

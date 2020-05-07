@@ -1,0 +1,6 @@
+broker:
+  addr: tcp://39.100.139.81:1883
+  client: edge1
+  user: admin
+  password: public
+  heartbeat: 2
