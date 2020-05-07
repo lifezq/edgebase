@@ -1,10 +1,13 @@
 package main
 
 import (
-	"code.uni-ledger.com/switch/edgebase/control/telemetry"
-	"code.uni-ledger.com/switch/edgebase/internal/mqtt"
 	"fmt"
 	"time"
+
+	"code.uni-ledger.com/switch/edgebase/control/service"
+	"code.uni-ledger.com/switch/edgebase/control/telemetry"
+	"code.uni-ledger.com/switch/edgebase/internal/mqtt"
+	"code.uni-ledger.com/switch/edgebase/internal/types"
 
 	"github.com/spf13/viper"
 )
@@ -24,13 +27,21 @@ func init() {
 
 func main() {
 	time.Sleep(5 * time.Second)
-	msg := []byte("cmd")
-	ret, err := telemetry.SendMsg("edge1", msg, 5)
+	msg := types.Cmd{
+		ID:      mqtt.GetClientID(),
+		MsgType: types.MSG_DOWNLOAD,
+		Cmd:     []byte("ok"),
+	}
+	ret, err := telemetry.SendMsg("edge1", &msg, 30)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	fmt.Println("done:", ret)
-	ch := make(chan struct{})
-	<-ch
+	fmt.Println("done:", string(ret))
+
+	err = service.Init().Run()
+	if err != nil {
+		panic(err)
+	}
+
 }

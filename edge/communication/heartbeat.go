@@ -1,12 +1,13 @@
 package communication
 
 import (
-	"code.uni-ledger.com/switch/edgebase/internal/mqtt"
-	"code.uni-ledger.com/switch/edgebase/internal/types"
 	"encoding/json"
 	"fmt"
-	"github.com/spf13/viper"
 	"time"
+
+	"code.uni-ledger.com/switch/edgebase/internal/mqtt"
+	"code.uni-ledger.com/switch/edgebase/internal/types"
+	"github.com/spf13/viper"
 )
 
 var state types.HeartBeat
@@ -45,7 +46,7 @@ func sendHeartBeat() {
 			st.Time = time.Now().Unix()
 			dt, err := json.Marshal(st)
 			if err != nil {
-				fmt.Errorf("%s", err.Error())
+				fmt.Printf("%s\n", err.Error())
 				continue
 			}
 			heartBeat(dt)
