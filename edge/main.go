@@ -1,9 +1,11 @@
 package main
 
 import (
-	"code.uni-ledger.com/switch/edgebase/edge/communication"
-	"code.uni-ledger.com/switch/edgebase/internal/mqtt"
 	"fmt"
+
+	"code.uni-ledger.com/switch/edgebase/edge/communication"
+	"code.uni-ledger.com/switch/edgebase/edge/transfer"
+	"code.uni-ledger.com/switch/edgebase/internal/mqtt"
 
 	"github.com/spf13/viper"
 )
@@ -21,8 +23,29 @@ func init() {
 	communication.Init()
 }
 
-func main() {
+var yamlExample1 = []byte(`
+URL: http://39.100.139.81:8080/ping
+Method: GET
+Headers:
+  Cookie: 55
 
+`)
+
+var yamlExample2 = []byte(`
+URL: http://39.100.139.81:8080/tsping
+Method: POST
+Headers:
+  Cookie: 55
+  password: public
+Body: "dfafdsfdsa"
+  
+`)
+
+func main() {
+	ret, err := transfer.RPC_http(yamlExample1)
+	fmt.Println("do:", string(ret), err)
+	ret, err = transfer.RPC_http(yamlExample2)
+	fmt.Println("do:", string(ret), err)
 	ch := make(chan struct{})
 	<-ch
 }
