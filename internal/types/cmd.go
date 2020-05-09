@@ -1,9 +1,15 @@
 package types
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"os"
+)
 
 const (
 	MSG_DOWNLOAD = iota
+	MSG_EXEC
+
+	CMD_PATH = ".." + string(os.PathSeparator) + "cmd"
 )
 
 type Cmd struct {
