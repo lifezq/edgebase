@@ -33,16 +33,28 @@ func heartBeat(dt []byte) {
 	}
 }
 
+func heartBeatService(dt []byte) {
+	token := mqtt.GetClient().Publish(types.TP_HeartBeatService+mqtt.GetClientID(), 0, false, dt)
+	if token.Error() != nil {
+		fmt.Println(token.Error())
+	}
+}
+
 func sendHeartBeat() {
 	fmt.Println("Start communication")
 	defer fmt.Println("End communication...")
-	hbt := viper.GetInt64("broker.heartbeat")
+
+	var (
+		st  = state
+		hbt = viper.GetInt64("broker.heartbeat")
+		tc  = time.Tick(time.Duration(hbt) * time.Second)
+	)
+
 	fmt.Println(hbt)
-	tc := time.Tick(time.Duration(hbt) * time.Second)
+
 	for {
 		select {
 		case <-tc:
-			st := state
 			st.Time = time.Now().Unix()
 			dt, err := json.Marshal(st)
 			if err != nil {
@@ -50,6 +62,37 @@ func sendHeartBeat() {
 				continue
 			}
 			heartBeat(dt)
+		}
+	}
+}
+
+func sendHeartBeatService(service string, cancel <-chan bool) {
+	fmt.Printf("Start service [%s] communication", service)
+	defer fmt.Printf("End service [%s] communication...", service)
+
+	var (
+		st = types.HeartBeatService{
+			Service: service,
+			Alive:   true,
+		}
+		hbt = viper.GetInt64("broker.heartbeat")
+		tc  = time.Tick(time.Duration(hbt) * time.Second)
+	)
+
+	for {
+		select {
+		case <-tc:
+			st.Time = time.Now().Unix()
+			dt, err := json.Marshal(st)
+			if err != nil {
+				fmt.Printf("%s\n", err.Error())
+				continue
+			}
+			heartBeatService(dt)
+
+		case <-cancel:
+			fmt.Printf("Service [%s] exit, heartBaet stop...\n", service)
+			break
 		}
 	}
 }

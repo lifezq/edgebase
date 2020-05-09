@@ -12,7 +12,7 @@ import (
 )
 
 func SendMsg(target string, msg *types.Cmd, wait int) ([]byte, error) {
-	fmt.Println("sendMsg:", target, msg, wait)
+	fmt.Println("sendMsg:", target, string(msg.Cmd), wait)
 	c := mqtt.GetClient()
 
 	rtopic := types.TP_Return + mqtt.GetClientID()
@@ -40,6 +40,8 @@ func SendMsg(target string, msg *types.Cmd, wait int) ([]byte, error) {
 	if t.Error() != nil {
 		return nil, t.Error()
 	}
+
+	fmt.Println("receive...msg wait...")
 
 	ret := []byte{}
 	select {
