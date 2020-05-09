@@ -1,7 +1,8 @@
 package types
 
 const (
-	TP_HeartBeat = "client/communication/"
-	TP_SendMsg   = "msg/send/"
-	TP_Return    = "msg/return/"
+	TP_HeartBeat        = "client/communication/"
+	TP_HeartBeatService = "service/communication/"
+	TP_SendMsg          = "msg/send/"
+	TP_Return           = "msg/return/"
 )
