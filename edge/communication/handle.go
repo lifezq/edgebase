@@ -156,7 +156,7 @@ func handleExec(c []byte) ([]byte, error) {
 		cancel <- true
 	}(ns[0], command, cancel)
 	err = command.Start()
-	sendHeartBeatService(ns[0], cancel)
+	go sendHeartBeatService(ns[0], cancel)
 	if err != nil {
 		return []byte(""), err
 	}
